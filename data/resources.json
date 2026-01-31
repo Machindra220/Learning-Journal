@@ -2,11 +2,22 @@
   {
     "section": "Learning Skill",
     "url": "https://grafana.com/videos/?camp=699-3725&did=dgTtzwoDALP5HrL5HgGbo3yyyTSLff_W-UNCTBc%3D&src=email&user_id=1558445",
-    "desc": "Grafana Labs"
+    "desc": "Grafana Labs",
+    "id": "1769853237.3020658",
+    "date": "2026-01-31"
   },
   {
     "section": "Learning Skill",
     "url": "https://www.skool.com/career-dwar-community-7388/classroom",
-    "desc": "Interview Preparation "
+    "desc": "Interview Preparation ",
+    "id": "1769853237.302098",
+    "date": "2026-01-31"
+  },
+  {
+    "id": "1769853237.305015",
+    "date": "2026-01-31",
+    "section": "Learning Skill",
+    "url": "https://docs.python.org/3.9/tutorial/index.html",
+    "desc": "Python Official Tutorials"
   }
 ]
