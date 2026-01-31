@@ -2,16 +2,43 @@
   {
     "date": "2026-01-29",
     "section": "Daily Exercise",
-    "note": "Slow Walk"
+    "note": "Slow Walk",
+    "id": "1769849694.6398668"
   },
   {
     "date": "2026-01-28",
     "section": "Learning Skill",
-    "note": "SRE Book Chapter 10 Started."
+    "note": "SRE Book Chapter 10 Started.",
+    "id": "1769849694.6398802"
   },
   {
     "date": "2026-01-29",
     "section": "Learning Skill",
-    "note": "SRE Book Chapter 10 Complete."
+    "note": "SRE Book Chapter 10 Complete.",
+    "id": "1769849694.6398828"
+  },
+  {
+    "id": "1769849694.645319",
+    "date": "2026-01-30",
+    "section": "Daily Exercise",
+    "note": "Exercise done 15 minutes at home."
+  },
+  {
+    "id": "1769849728.718273",
+    "date": "2026-01-30",
+    "section": "Learning Skill",
+    "note": "SRE Book Chapter 11 reading completed."
+  },
+  {
+    "id": "1769849788.58374",
+    "date": "2026-01-31",
+    "section": "Daily Exercise",
+    "note": "Walking and slow run 4 KM outside."
+  },
+  {
+    "id": "1769849882.251297",
+    "date": "2026-01-31",
+    "section": "Learning Skill",
+    "note": "SRE Book chapter 12 reading started."
   }
 ]

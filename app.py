@@ -91,10 +91,12 @@ def page_show_notes():
     notes = load_json(NOTES_FILE, item_type="note")
 
     if notes:
-        df = pd.DataFrame(notes)
-        grouped = df.groupby("date")
+        df = pd.DataFrame(notes) 
+        df["date"] = pd.to_datetime(df["date"], errors="coerce") 
+        df = df.sort_values("date", ascending=False) # 🔑 latest first 
+        grouped = df.groupby(df["date"].dt.strftime("%Y-%m-%d"))
 
-        for d, group in grouped:
+        for d, group in sorted(grouped, key=lambda x: x[0], reverse=True): # 🔑 sort keys descending
             st.markdown(f"### {d}")
             for _, row in group.iterrows():
                 col_text, col_edit, col_delete = st.columns([0.8, 0.1, 0.1])
@@ -192,41 +194,43 @@ def page_show_resources():
 def page_calendar():
     st.title("📆 Calendar View")
     notes = load_json(NOTES_FILE, item_type="note")
+    resources = load_json(RES_FILE, item_type="resource")
 
-    if notes:
-        df = pd.DataFrame(notes)
-        df["date"] = pd.to_datetime(df["date"], errors="coerce")
-        df = df.dropna(subset=["date"])
-        df["day"] = df["date"].dt.day
+    if notes or resources:
+        df_notes = pd.DataFrame(notes)
+        df_notes["date"] = pd.to_datetime(df_notes["date"], errors="coerce")
 
-        # Find earliest note date
-        start_date = df["date"].min().date()
+        df_res = pd.DataFrame(resources)
+        df_res["date"] = pd.to_datetime(df_res["date"], errors="coerce")
+
+        start_date = min(
+            [df_notes["date"].min(), df_res["date"].min()]
+        ).date() if not df_notes.empty or not df_res.empty else date.today()
         end_date = date.today()
 
-        # Build range from earliest note to today
         all_days = pd.date_range(start=start_date, end=end_date)
 
-        summary = df.groupby("date").size().reset_index(name="notes_count")
+        summary_notes = df_notes.groupby("date").size().reset_index(name="notes_count")
+        resource_days = set(df_res["date"].dt.date) if not df_res.empty else set()
 
         data = []
         for d in all_days:
-            match = summary[summary["date"] == d]
-            if not match.empty:
-                count = int(match["notes_count"].values[0])
-                status = "✅"
-            else:
-                count = 0
-                status = ""
+            match = summary_notes[summary_notes["date"] == d]
+            count = int(match["notes_count"].values[0]) if not match.empty else 0
+            status = "✅" if count > 0 else ""
+            res_mark = "🔵" if d.date() in resource_days else ""   # 🔑 blue mark
             data.append({
-                "day": d.day,
                 "Date": d.strftime("%Y-%m-%d"),
-                "notes_count": count,
-                "status": status
+                "Notes Count": count,
+                "Notes Status": status,
+                "Resource Status": res_mark
             })
 
-        st.dataframe(pd.DataFrame(data))
+        df_calendar = pd.DataFrame(data)
+        df_calendar = df_calendar.sort_values("Date", ascending=False)  # 🔑 latest first
+        st.dataframe(df_calendar)
     else:
-        st.info("No notes yet.")
+        st.info("No notes or resources yet.")
 
 
 # -----------------------------
@@ -302,24 +306,29 @@ def page_schedule():
 # -----------------------------
 def main():
     st.sidebar.title("Learning Journal")
+
     page = st.sidebar.radio("Navigate", [
-        "Add Notes", "Show Notes",
-        "Add Resources", "Show Resources",
-        "Calendar", "Schedule"
+        "➕ Add Notes",
+        "📒 Show Notes",
+        "➕ Add Resources",
+        "🔗 Show Resources",
+        "📆 Calendar",
+        "📋 Schedule"
     ])
 
-    if page == "Add Notes":
+    if page == "➕ Add Notes":
         page_add_notes()
-    elif page == "Show Notes":
+    elif page == "📒 Show Notes":
         page_show_notes()
-    elif page == "Add Resources":
+    elif page == "➕ Add Resources":
         page_add_resources()
-    elif page == "Show Resources":
+    elif page == "🔗 Show Resources":
         page_show_resources()
-    elif page == "Calendar":
+    elif page == "📆 Calendar":
         page_calendar()
-    elif page == "Schedule":
+    elif page == "📋 Schedule":
         page_schedule()
+
 
 if __name__ == "__main__":
     main()
